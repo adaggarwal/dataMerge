@@ -14,6 +14,8 @@ module.exports = async function (context, req) {
   // Create the master hash
   const hashMap = {}
 
+  const regex = RegExp('^.*[.]+.*$');
+
   for (let i = 1; i < salesOrderHeadersV2.length - 1; ++i) {
     const linedata = salesOrderHeadersV2[i].split(',')
     if (linedata.length === 3) {
@@ -32,7 +34,7 @@ module.exports = async function (context, req) {
     const element = salesOrderLinesV2[i].split(',')
     let line = []
     if (element.length === 5) {
-      if ((element[3] in hashMap) && (hashMap[element[3]].email !== '')) {
+      if ((element[3] in hashMap) && (hashMap[element[3]].email !== '') && (regex.test(hashMap[element[3]].email))) {
         line = [element[0], element[2], element[3], element[4], hashMap[element[3]].email, hashMap[element[3]].timestamp].join(',')
         mergedData.push([line])
       }
